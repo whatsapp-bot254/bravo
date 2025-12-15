@@ -105,7 +105,97 @@
     // 1. **Configuration: REPLACE THESE WITH YOUR ACTUAL API DETAILS**
     const API_ENDPOINT = 'YOUR_CHATBOT_API_ENDPOINT'; 'https://api.bk9.dev/ai/llama?q='
     const API_KEY = 'YOUR_SECRET_API_KEY'; // If your API requires a key
+const availableApis = [
+   // "https://bk9.fun/ai/jeeves-chat2?q=",
+    "https://api.bk9.dev/ai/llama?q=",
+    "https://api.bk9.dev/ai/llama?q="
+];
 
+function getRandomApi() {
+    return availableApis[Math.floor(Math.random() * availableApis.length)];
+}
+
+function processForTTS(text) {
+    if (!text || typeof text !== 'string') return '';
+    return text.replace(/[\[\]\(\)\{\}]/g, ' ')
+              .replace(/\s+/g, ' ')
+              .substring(0, 190);
+}
+
+async function getAIResponse(query) {
+    const identityPatterns = [
+    /who\s*(made|created|built)\s*you/i,
+    /who\s*is\s*your\s*(creator|developer|maker|owner|father|parent)/i,
+    /what('?s| is)\s*your\s*name\??/i,
+    /who\s*are\s*you\??/i,
+    /who\s*a?you\??/i,
+    /who\s*au\??/i,
+    /what('?s| is)\s*ur\s*name\??/i,
+    /wat('?s| is)\s*(ur|your)\s*name\??/i,
+    /wats?\s*(ur|your)\s*name\??/i,
+    /wot('?s| is)\s*(ur|your)\s*name\??/i,
+    /hoo\s*r\s*u\??/i,
+    /who\s*u\??/i,
+    /whos\s*u\??/i,
+    /whos?\s*this\??/i,
+    /you\s*called\s*bwm/i,
+    /are\s*you\s*bwm/i,
+    /are\s*u\s*bwm/i,
+    /u\s*bwm\??/i,
+    /who\s*is\s*your\s*boss\??/i,
+    /who\s*ur\s*boss\??/i,
+    /who\s*your\s*boss\??/i,
+    /whoa\s*created\s*you\??/i,
+    /who\s*made\s*u\??/i,
+    /who\s*create\s*u\??/i,
+    /who\s*built\s*u\??/i,
+    /who\s*ur\s*owner\??/i,
+    /who\s*is\s*u\??/i,
+    /what\s*are\s*you\??/i,
+    /what\s*r\s*u\??/i,
+    /wat\s*r\s*u\??/i
+];
+
+    const isIdentityQuestion = identityPatterns.some(pattern => 
+        typeof query === 'string' && pattern.test(query)
+    );
+    
+    try {
+        const apiUrl = getRandomApi();
+        const response = await fetch(apiUrl + encodeURIComponent(query));
+        
+        // First try to parse as JSON
+        try {
+            const data = await response.json();
+            // Handle different API response formats
+            let aiResponse = data.BK9 || data.result || data.response || data.message || 
+                           (data.data && (data.data.text || data.data.message)) || 
+                           JSON.stringify(data);
+            
+            // If we got an object, stringify it
+            if (typeof aiResponse === 'object') {
+                aiResponse = JSON.stringify(aiResponse);
+            }
+
+            if (isIdentityQuestion) {
+                aiResponse = 'I am jëëpërs çrëëpër bot,created by sir bravin! 🚀';
+            }
+            
+            return aiResponse;
+        } catch (jsonError) {
+            // If JSON parse fails, try to get as text
+            const textResponse = await response.text();
+            return isIdentityQuestion 
+                ? `I am jëëpërs çrëëpër bot, created by sir bravin! 🚀`
+                : textResponse;
+        }
+    } catch (error) {
+        console.error("API Error:", error);
+        return isIdentityQuestion 
+            ? "I'm jëëpërs çrëëpër bot, created by sir bravin! 🚀"
+            : "Sorry, I couldn't get a response right now";
+    }
+        }
     const chatBox = document.getElementById('chat-box');
     const userInput = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
