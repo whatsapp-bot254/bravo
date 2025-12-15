@@ -1,73 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple HTML Audio Player</title>
-    <style>
-        /* Optional: Basic CSS to make the player look a bit nicer */
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-
-        .audio-container {
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        h2 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        /* Styling the native controls (limited but effective) */
-        audio {
-            width: 100%;
-            margin-top: 15px;
-        }
-
-        /* Accessibility/Metadata styles */
-        .track-info {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 5px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="audio-container">
-        <h2>My Awesome Podcast Episode</h2>
-
-        <audio id="myAudioPlayer" controls>
-            <source src="your-audio-file.mp3" type="audio/mpeg">
-            
-            <source src="your-audio-file.ogg" type="audio/ogg">
-
-            <p>Your browser does not support the audio element. You can download the file 
-               <a href="your-audio-file.mp3" download>here</a>.</p>
-        </audio>
-
-        <div class="track-info">
-            Artist: The Code Maker | Duration: 4:30
-        </div>
-        
-        <button onclick="document.getElementById('myAudioPlayer').play()" style="margin-top: 15px;">
-            Play (Alternative Button)
-        </button>
-
-    </div>
-
-</body>
-</html>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audio Search & Downloader</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --card: #121a2b;
+      --muted: #8aa0 reminds;
+      --text: #e7ecf4;
+      --accent: #4f7cff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: linear-gradient(120deg, #0b1220, #0e1630);
+      color: var(--text);
+    }
+    header {
+      padding: 24px; text-align: center;
+    }
+    header h1 { margin: 0 0 8px; font-size: 28px; }
+    header p { margin: 0; opacity: .85; }
+    .container { max-width: 1100px; margin: auto; padding: 16px; }
+    .search {
+      display: grid; grid-template-columns: 1fr auto auto; gap: 8px;
+      background: var(--card); padding: 12px; border-radius: 14px;
+    }
+    .search input, .search select, .search button {
+      padding: 12px 14px; border-radius: 10px; border: 1px solid #26314d;
+      background: #0f1730; color: var(--text);
+    }
+    .search button { background: var(--accent); border: none; cursor: pointer; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 16px; }
+    .card {
